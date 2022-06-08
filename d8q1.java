@@ -1,68 +1,80 @@
 
-class Solution
-{
-    //Function to find the maximum profit and the number of jobs done.
-    int[] JobScheduling(Job arr[], int n)
-    {
-        // Your code here
-        Arrays.sort(arr,(a,b)->b.profit-a.profit);
+
+class meeting{
+    
+    int start;
+    int end;
+    int pos;
+    
+    meeting(int start, int end, int pos){
+        
+        this.start = start;
+        this.end = end;
+        this.pos = pos;
         
         
-        int s=0;
-        for(int i=0;i<n;i++){
-            if(arr[i].deadline>s){
-                s=arr[i].deadline;
-            }
+    }
+    
+}
+
+class meetingComparator implements Comparator<meeting>{
+    
+    @Override
+    public int  compare(meeting o1,meeting o2){
+        
+        if (o1.end <o2.end){
+            return -1;
+        }else if(o1.end>o2.end){
+            return 1;
         }
-        
-        
-        int[] jn = new int[s];
-        for(int j=0;j<s;j++){
-            jn[j]=-1;
+        else if(o1.pos<o2.pos){
+            return -1;
         }
-        
-        int max = 0;
-        int jd =0;
-        for(int i=0;i<n;i++){
-            
-            for(int j=arr[i].deadline-1;j>=0;j--){
-                
-                if(jn[j]==-1){
-                    jn[j]=arr[i].id;
-                    jd++;
-                    max = max+arr[i].profit;
-                    break;
-                }
-                
-                
-                
-            }
-            
-            
-            
-            
-            
+        else{
+            return 1;
         }
-        
-        
-        
-        
-        
-        
-        int[] ans =new int[2];
-        ans[0]=jd;
-        ans[1]=max;
-        return ans;
     }
 }
 
-/*
-class Job {
-    int id, profit, deadline;
-    Job(int x, int y, int z){
-        this.id = x;
-        this.deadline = y;
-        this.profit = z; 
+
+class Solution 
+{
+    //Function to find the maximum number of meetings that can
+    //be performed in a meeting room.
+    public static int maxMeetings(int start[], int end[], int n)
+    {
+        // add your code here
+        
+        ArrayList<meeting> m = new ArrayList<>();
+        
+        for(int i=0;i<n;i++){
+            meeting t = new meeting(start[i],end[i],i+1);
+            m.add(t);
+        }
+        meetingComparator mc = new meetingComparator();
+        Collections.sort(m,mc);
+        
+        int c =0;
+        
+        int limit = -1;
+        
+        for(int i=0;i<m.size();i++){
+            if(m.get(i).start>limit){
+                c++;
+                limit=m.get(i).end;
+            }
+        }
+        
+        
+        
+        return c;
+        
+        
+        
+        
+        
+        
+        
     }
 }
-*/
+
